@@ -9,10 +9,10 @@ def generate_launch_description():
         output="screen",
     )
 
-    rotator_node = Node(
-        package="rotator",
-        executable="rotator_node",
-        name="rotator",
+    synthesizer_node = Node(
+        package="synthesizer",
+        executable="synthesizer_node",
+        name="synthesizer",
         output="screen",
     )
 
@@ -26,7 +26,7 @@ def generate_launch_description():
     # 将所有节点添加到LaunchDescription
     ld = LaunchDescription()
     ld.add_action(navigator_node)
-    ld.add_action(rotator_node)
+    ld.add_action(synthesizer_node)
     ld.add_action(decision_node)
 
     return ld

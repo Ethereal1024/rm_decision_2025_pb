@@ -22,7 +22,7 @@ DecisionBase::DecisionBase(uint selfId, std::string nodeName, const rclcpp::Node
 
     nav_pub_ = this->create_publisher<navigator_interfaces::msg::Navigate>("to_navigator", 10, pubOpt);
     nav_vel_pub_ = this->create_publisher<std_msgs::msg::Float32MultiArray>("nav_vel", 10, pubOpt);
-    angle_pub_ = this->create_publisher<std_msgs::msg::Float32>("to_rotator", 10, pubOpt);
+    angle_pub_ = this->create_publisher<std_msgs::msg::Float32>("angular_cmd_vel", 10, pubOpt);
     test_feedback_pub_ = this->create_publisher<std_msgs::msg::String>("test_feedback", 10, pubOpt);
 
     linear_offset_ = PlaneCoordinate(0, 0);

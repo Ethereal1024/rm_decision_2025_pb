@@ -32,7 +32,6 @@ private:
 
     rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr current_pose_pub_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
-    rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr angular_vel_sub_;
 
     rclcpp::TimerBase::SharedPtr timer_;
 
@@ -50,13 +49,10 @@ private:
     NavState nav_state_;
     int failed_count_;
     bool available_;
-    double angular_vel_;
 
     void nav_callback(const navigator_interfaces::msg::Navigate::SharedPtr msg);
 
     void vel_callback(const std_msgs::msg::Float32MultiArray::SharedPtr msg);
-
-    void angular_callback(const std_msgs::msg::Float32::SharedPtr msg);
 
     void goal_response_callback(
         rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::SharedPtr future);

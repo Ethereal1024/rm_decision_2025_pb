@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(rotator)
+project(synthesizer)
 
 ## Use C++17
 set(CMAKE_CXX_STANDARD 17)
@@ -24,12 +24,12 @@ ament_auto_find_build_dependencies()
 ###########
 
 ament_auto_add_library(${PROJECT_NAME} SHARED
-        include/rotator/rotator.hpp
-        src/rotator.cpp
+        include/synthesizer/synthesizer.hpp
+        src/synthesizer.cpp
 )
 
 rclcpp_components_register_node(${PROJECT_NAME}
-        PLUGIN Rotator
+        PLUGIN Synthesizer
         EXECUTABLE ${PROJECT_NAME}_node
 )
 
