@@ -10,7 +10,7 @@ DecisionBTOne::DecisionBTOne(const rclcpp::NodeOptions& options)
 }
 
 std::string DecisionBTOne::bt_file_path() {
-    std::string share_dir = ament_index_cpp::get_package_share_directory("decision_bt_zero");
+    std::string share_dir = ament_index_cpp::get_package_share_directory("decision_bt_one");
     return share_dir + "/config/bt_one.xml";
 }
 

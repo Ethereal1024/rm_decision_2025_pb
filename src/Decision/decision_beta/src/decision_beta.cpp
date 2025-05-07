@@ -6,9 +6,9 @@ void DecisionBeta::rotate_to_angle(const double& targetAngle) const {
     const double KI = 0.03;
     const double KD = 0.001;
 
-    const double TOLARANCE = 0.03;
+    const double TOLARANCE = 0.05;
     const double RATE = 100;
-    const double TIME_LIMIT = 60;  // 单位：秒
+    const double TIME_LIMIT = 5;  // 单位：秒
 
     double previousError = 0.0;  // 上一次的误差
     double integral = 0.0;       // 误差的积分项

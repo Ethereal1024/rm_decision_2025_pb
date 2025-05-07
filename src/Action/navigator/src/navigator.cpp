@@ -11,8 +11,6 @@ Navigator::Navigator(const rclcpp::NodeOptions& options) : Node("navigator", opt
         "to_navigator", 10, std::bind(&Navigator::nav_callback, this, std::placeholders::_1), sub_opt);
     vel_msg_sub_ = this->create_subscription<std_msgs::msg::Float32MultiArray>(
         "nav_vel", 10, std::bind(&Navigator::vel_callback, this, std::placeholders::_1), sub_opt);
-    angular_vel_sub_ = this->create_subscription<std_msgs::msg::Float32>(
-        "to_rotator", 10, std::bind(&Navigator::angular_callback, this, std::placeholders::_1));
 
     current_pose_pub_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("navigator/current_pose", 10, pub_opt);
     vel_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10, pub_opt);
@@ -34,7 +32,6 @@ Navigator::Navigator(const rclcpp::NodeOptions& options) : Node("navigator", opt
     nav_state_ = INIT;
     failed_count_ = 0;
     available_ = true;
-    angular_vel_ = 0;
 }
 
 void Navigator::goal_response_callback(
@@ -105,12 +102,8 @@ void Navigator::vel_callback(const std_msgs::msg::Float32MultiArray::SharedPtr m
     cmd.linear.z = 0;
     cmd.angular.x = 0;
     cmd.angular.y = 0;
-    cmd.angular.z = angular_vel_;
+    cmd.angular.z = 0;
     vel_pub_->publish(cmd);
-}
-
-void Navigator::angular_callback(const std_msgs::msg::Float32::SharedPtr msg) {
-    angular_vel_ = msg->data;
 }
 
 void Navigator::timer_callback() {
