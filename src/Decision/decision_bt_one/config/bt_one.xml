@@ -2,7 +2,7 @@
     <BehaviorTree ID="MainTree">
         <Sequence name="root_sequence">
             <NavToPointSerially targetPoint="5.2;-2"/>
-            <RotateToAngle rargetAngle="0"/>
+            <RotateToAngle targetAngle="0"/>
             <MoveToPoint targetPoint="1.8;-2.7"/>
             <NavToPointSerially targetPoint="9.6;1.5"/>
         </Sequence>
