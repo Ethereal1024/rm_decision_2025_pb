@@ -6,6 +6,9 @@ Synthesizer::Synthesizer(const rclcpp::NodeOptions& options) : Node("synthesizer
         "angular_cmd_vel", 10, std::bind(&Synthesizer::angular_vel_callback, this, std::placeholders::_1));
     linear_vel_sub_ = this->create_subscription<geometry_msgs::msg::Twist>(
         "linear_cmd_vel", 10, std::bind(&Synthesizer::linear_vel_callback, this, std::placeholders::_1));
+
+    geometry_msgs::msg::Twist zero_twist{};
+    cmd_ = zero_twist;
 }
 
 void Synthesizer::angular_vel_callback(const std_msgs::msg::Float32::SharedPtr msg) {
