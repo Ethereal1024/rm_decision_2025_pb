@@ -21,8 +21,6 @@ public:
 
     double get_current_angle() const;
 
-    void test_display(const char* format, ...) const;
-
 protected:
     virtual void register_nodes(RMBT::BehaviorTreeFactory& factory);
 

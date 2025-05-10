@@ -20,6 +20,7 @@ void DecisionBT::bt_exec() {
         tree_.sleep(std::chrono::milliseconds(100));
         test_display("[ ####### TREE TICKING ####### ]\n");
         status = tree_.tickOnce();
+        std::cout << BT::toStr(status) << std::endl;
         test_display("[ ###### STATUS:%s ###### ]\n\n", BT::toStr(status).c_str());
     }
 }
@@ -76,11 +77,4 @@ PlaneCoordinate DecisionBT::get_current_coordinate() const {
 
 double DecisionBT::get_current_angle() const {
     return DecisionBeta::get_current_angle();
-}
-
-void DecisionBT::test_display(const char* format, ...) const {
-    va_list args;
-    va_start(args, format);
-    DecisionBeta::test_display(format, args);
-    va_end(args);
 }

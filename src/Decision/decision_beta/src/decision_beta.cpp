@@ -3,7 +3,7 @@ using namespace RMDecision;
 
 void DecisionBeta::rotate_to_angle(const double& targetAngle) const {
     const double KP = 0.8;
-    const double KI = 0.03;
+    const double KI = 0.1;
     const double KD = 0.001;
 
     const double TOLARANCE = 0.05;
