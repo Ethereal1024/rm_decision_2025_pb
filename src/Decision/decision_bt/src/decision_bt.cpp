@@ -20,7 +20,6 @@ void DecisionBT::bt_exec() {
         tree_.sleep(std::chrono::milliseconds(100));
         test_display("[ ####### TREE TICKING ####### ]\n");
         status = tree_.tickOnce();
-        std::cout << BT::toStr(status) << std::endl;
         test_display("[ ###### STATUS:%s ###### ]\n\n", BT::toStr(status).c_str());
     }
 }
@@ -31,6 +30,7 @@ void DecisionBT::register_basic_nodes(RMBT::BehaviorTreeFactory& factory) {
     factory.registerNodeType<MoveToPoint, DecisionBT>("MoveToPoint", this);
     factory.registerNodeType<RotateToAngle, DecisionBT>("RotateToAngle", this);
     factory.registerNodeType<RotateToVec, DecisionBT>("RotateToVec", this);
+    factory.registerNodeType<Spin, DecisionBT>("Spin", this);
     factory.registerNodeType<PointAchieved, DecisionBT>("PointAchieved", this);
     factory.registerNodeType<AngleAchieved, DecisionBT>("AngleAchieved", this);
 }
@@ -69,6 +69,10 @@ void DecisionBT::rotate_to_angle(const double& targetAngle) const {
 
 void DecisionBT::rotate_to_vec(const PlaneCoordinate& vec) const {
     DecisionBeta::rotate_to_vec(vec);
+}
+
+void DecisionBT::set_angular_velocity(const double& speed) const {
+    DecisionBeta::set_angular_velocity(speed);
 }
 
 PlaneCoordinate DecisionBT::get_current_coordinate() const {

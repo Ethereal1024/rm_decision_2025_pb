@@ -18,8 +18,6 @@ inline RMDecision::PlaneCoordinate convertFromString(StringView str) {
 
 namespace RMDecision {
 
-class DecisionBT;
-
 class NavToPoint : public RMBT::StatefulActionNode<DecisionBT> {
 public:
     NavToPoint(const std::string& name,
@@ -41,14 +39,19 @@ public:
     }
 
     BT::NodeStatus onRunning() override {
-        if (host_->get_current_coordinate().coincide_with(goal_, 0.1)) {
+        PlaneCoordinate current_point = host_->get_current_coordinate();
+        if (current_point.coincide_with(goal_, 0.3)) {
             host_->test_display("[ NavToPoint: FINISHED ]\n");
             return BT::NodeStatus::SUCCESS;
         } else {
             host_->test_display(
-                "[ NavToPoint ] Distance remaining: %.3f", (host_->get_current_coordinate() - goal_).norm());
+                "[ NavToPoint ] Distance remaining: %.3f", (current_point - goal_).norm());
+            if ((current_point - previous_point_).norm() < 0.05 && (current_point - goal_).norm() > 0.3) {
+                host_->nav_to_point(goal_);
+            }
             return BT::NodeStatus::RUNNING;
         }
+        previous_point_ = current_point;
     }
 
     void onHalted() override {
@@ -57,6 +60,7 @@ public:
 
 private:
     PlaneCoordinate goal_;
+    PlaneCoordinate previous_point_;
 };
 
 class NavToPointSerially : public RMBT::SyncActionNode<DecisionBT> {
@@ -93,6 +97,7 @@ public:
     }
 
     BT::NodeStatus onStart() override {
+        start_time_ = host_->now();
         if (!getInput<PlaneCoordinate>("targetPoint", goal_)) {
             throw BT::RuntimeError("missing required input [targetPoint]");
         }
@@ -108,6 +113,14 @@ public:
             }
             host_->test_display("[ MoveToPoint: FINISHED ]\n");
             return BT::NodeStatus::SUCCESS;
+        } else if ((host_->now() - start_time_).seconds() > 10) {
+            host_->abort();
+            if (move_thread_.joinable()) {
+                move_thread_.join();
+            }
+            host_->reset();
+            host_->test_display("[ MoveToPoint: FAILED ]\n");
+            return BT::NodeStatus::FAILURE;
         } else {
             host_->test_display(
                 "[ MoveToPoint ] Distance remaining: %.3f", (host_->get_current_coordinate() - goal_).norm());
@@ -127,6 +140,7 @@ public:
 private:
     PlaneCoordinate goal_;
     std::thread move_thread_;
+    rclcpp::Time start_time_;
 };
 
 class RotateToAngle : public RMBT::StatefulActionNode<DecisionBT> {
@@ -141,6 +155,7 @@ public:
     }
 
     BT::NodeStatus onStart() override {
+        start_time_ = host_->now();
         if (!getInput<double>("targetAngle", goal_)) {
             throw BT::RuntimeError("missing required input [targetAngle]");
         }
@@ -150,14 +165,20 @@ public:
     }
 
     BT::NodeStatus onRunning() override {
-        if (std::abs(host_->get_current_angle() - goal_) < 0.05) {
+        if (std::abs(host_->get_current_angle() - goal_) < 0.08) {
             if (rotate_thread_.joinable()) {
                 rotate_thread_.join();
             }
             host_->test_display("[ RotateToAngle: FINISHED ]\n");
             return BT::NodeStatus::SUCCESS;
+        } else if ((host_->now() - start_time_).seconds() > 5) {
+            if (rotate_thread_.joinable()) {
+                rotate_thread_.join();
+            }
+            host_->test_display("[ RotateToAngle: FAILED ]\n");
+            return BT::NodeStatus::FAILURE;
         } else {
-            host_->test_display("[ RotateToAngle ] Angle remaining: %.3f", std::abs(host_->get_current_angle() - goal_));
+            host_->test_display("[ RotateToAngle ] Angle remaining: %.3f\n", std::abs(host_->get_current_angle() - goal_));
             return BT::NodeStatus::RUNNING;
         }
     }
@@ -174,6 +195,7 @@ public:
 private:
     double goal_;
     std::thread rotate_thread_;
+    rclcpp::Time start_time_;
 };
 
 class RotateToVec : public RMBT::StatefulActionNode<DecisionBT> {
@@ -188,6 +210,7 @@ public:
     }
 
     BT::NodeStatus onStart() override {
+        start_time_ = host_->now();
         if (!getInput<PlaneCoordinate>("targetVec", goal_)) {
             throw BT::RuntimeError("missing required input [RotateToVec]");
         }
@@ -197,12 +220,18 @@ public:
     }
 
     BT::NodeStatus onRunning() override {
-        if (std::abs(host_->get_current_angle() - goal_.angle()) < 0.05) {
+        if (std::abs(host_->get_current_angle() - goal_.angle()) < 0.08) {
             if (rotate_thread_.joinable()) {
                 rotate_thread_.join();
             }
             host_->test_display("[ RotateToVec: FINISHED ]\n");
             return BT::NodeStatus::SUCCESS;
+        } else if ((host_->now() - start_time_).seconds() > 5) {
+            if (rotate_thread_.joinable()) {
+                rotate_thread_.join();
+            }
+            host_->test_display("[ RotateToVec: FAILED ]\n");
+            return BT::NodeStatus::FAILURE;
         } else {
             host_->test_display("[ RotateToVec ] Angle remaining: %.3f", std::abs(host_->get_current_angle() - goal_.angle()));
             return BT::NodeStatus::RUNNING;
@@ -221,6 +250,47 @@ public:
 private:
     PlaneCoordinate goal_;
     std::thread rotate_thread_;
+    rclcpp::Time start_time_;
+};
+
+class Spin : public RMBT::StatefulActionNode<DecisionBT> {
+public:
+    Spin(const std::string& name,
+         DecisionBT* decisionNodeBT,
+         const BT::NodeConfig& config)
+        : RMBT::StatefulActionNode<DecisionBT>(name, decisionNodeBT, config) {}
+
+    static BT::PortsList providedPorts() {
+        return {BT::InputPort<double>("speed")};
+    }
+
+    BT::NodeStatus onStart() override {
+        if (!getInput<double>("speed", speed_)) {
+            throw BT::RuntimeError("missing required input [RotateToVec]");
+        }
+        host_->test_display("[ RotateToVec: STARTED ]\n");
+        host_->set_angular_velocity(speed_);
+        return BT::NodeStatus::RUNNING;
+    }
+
+    BT::NodeStatus onRunning() override {
+        if (std::abs(host_->get_current_angle() - previous_angle_) < 0.1) {
+            host_->test_display(
+                "[ Spin ] Attempting to spin... (expected speed: %.3f)", speed_);
+            return BT::NodeStatus::RUNNING;
+        } else {
+            host_->test_display("[ Spin: FINISHED ]\n");
+            return BT::NodeStatus::SUCCESS;
+        }
+    }
+
+    void onHalted() override {
+        host_->test_display("[ Spin: ABORTED ]\n");
+    }
+
+private:
+    double speed_;
+    double previous_angle_;
 };
 
 class PointAchieved : public RMBT::ConditionNode<DecisionBT> {

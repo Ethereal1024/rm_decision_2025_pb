@@ -1,9 +1,37 @@
+<!-- <root BTCPP_format="4">
+    <BehaviorTree ID="MainTree">
+        <Fallback>
+            <Sequence name="basic_sequence">
+                    <NavToPoint targetPoint="8.4;5.7"/>
+                    <RotateToAngle targetAngle="0.75"/>
+                    <MoveToPoint targetPoint="12.0;6.1"/>
+                    <NavToPoint targetPoint="11.0;6.0"/>
+                    <Spin speed="3.14"/>
+            </Sequence>
+            <RetryUntilSuccessful num_attempts="3">
+                <Sequence name="retry_sequence">
+                    <MoveToPoint targetPoint="8.4;5.7"/>
+                    <RotateToAngle targetAngle="0.75"/>
+                    <MoveToPoint targetPoint="12.0;6.1"/>
+                    <NavToPoint targetPoint="11.0;6.0"/>
+                    <Spin speed="3.14"/>
+                </Sequence>
+            </RetryUntilSuccessful>
+        </Fallback>
+    </BehaviorTree>
+</root> -->
+
 <root BTCPP_format="4">
     <BehaviorTree ID="MainTree">
-        <Sequence name="root_sequence">
-            <NavToPoint targetPoint="8.5;5.8"/>
-            <RotateToAngle targetAngle="0.75"/>
-            <MoveToPoint targetPoint="11.8;6.3"/>
-        </Sequence>
+        <RetryUntilSuccessful num_attempts="3">
+            <Sequence name="retry_sequence">
+                <Spin speed="3.14"/>
+                <!-- <RotateToAngle targetAngle="0.76"/> -->
+                <NavToPoint targetPoint="8.4;5.7"/>
+                <MoveToPoint targetPoint="12.0;6.1"/>
+                <NavToPoint targetPoint="11.0;6.0"/>
+                <Spin speed="3.14"/>
+            </Sequence>
+        </RetryUntilSuccessful>
     </BehaviorTree>
 </root>

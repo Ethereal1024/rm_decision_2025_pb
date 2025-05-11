@@ -2,13 +2,13 @@
 using namespace RMDecision;
 
 void DecisionBeta::rotate_to_angle(const double& targetAngle) const {
-    const double KP = 0.8;
-    const double KI = 0.1;
+    const double KP = 1.0;
+    const double KI = 0.2;
     const double KD = 0.001;
 
-    const double TOLARANCE = 0.05;
+    const double TOLARANCE = 0.01;
     const double RATE = 100;
-    const double TIME_LIMIT = 5;  // 单位：秒
+    const double TIME_LIMIT = 4;  // 单位：秒
 
     double previousError = 0.0;  // 上一次的误差
     double integral = 0.0;       // 误差的积分项
@@ -63,7 +63,7 @@ void DecisionBeta::move_to_point(const PlaneCoordinate& targetPoint) const {
 
     const double TOLARANCE = 0.08;
     const double RATE = 100;
-    const double TIME_LIMIT = 10;  // 单位：秒
+    const double TIME_LIMIT = 8;  // 单位：秒
 
     auto previousError = PlaneCoordinate(0.0, 0.0);  // 上一次的误差
     auto integral = PlaneCoordinate(0.0, 0.0);       // 误差的积分项
