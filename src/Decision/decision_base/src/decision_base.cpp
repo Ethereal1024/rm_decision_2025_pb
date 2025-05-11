@@ -70,6 +70,7 @@ void DecisionBase::nav_to_pose(const PoseStamped& stampedPose, bool instant) con
 }
 
 PlaneCoordinate DecisionBase::get_current_coordinate() const {
+    // std::cout << PlaneCoordinate(prism_.self->pose).transform(-linear_offset_, -angular_offset_).x << " " << PlaneCoordinate(prism_.self->pose).transform(-linear_offset_, -angular_offset_).y << std::endl;
     return PlaneCoordinate(prism_.self->pose).transform(-linear_offset_, -angular_offset_);
 }
 

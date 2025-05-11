@@ -21,6 +21,8 @@ class DecisionBase : public rclcpp::Node {
 public:
     explicit DecisionBase(uint selfId, std::string nodeName, const rclcpp::NodeOptions& options);
 
+    void test_display(const char* format, ...) const;
+
     const double PI = 3.1415926585;
 
 protected:
@@ -49,8 +51,6 @@ protected:
     void mark_origin_linear();
 
     void mark_origin_angular();
-
-    void test_display(const char* format, ...) const;
 
     virtual void test_response(const std::string& instruction, const std::vector<float>& args) {};
 
