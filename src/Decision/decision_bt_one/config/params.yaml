@@ -1,0 +1,3 @@
+decision_bt_one_node:
+  ros__parameters:
+    faction: BLUE

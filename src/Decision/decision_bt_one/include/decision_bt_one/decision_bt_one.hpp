@@ -18,9 +18,15 @@ private:
 
     std::string bt_file_path() override;
 
+    void register_nodes(RMDecision::RMBT::BehaviorTreeFactory& factory) override;
+
     rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr pose_sub_;
     rclcpp::Subscription<pb_rm_interfaces::msg::GameRobotHP>::SharedPtr hp_sub_;
     rclcpp::Subscription<pb_rm_interfaces::msg::GameStatus>::SharedPtr game_sub_;
+
+    double enemy_outpost_hp_;
+    double self_base_hp_;
+    RMDecision::Faction faction_;
 };
 
 class GameRunning : public RMDecision::RMBT::ConditionNode<DecisionBTOne> {
