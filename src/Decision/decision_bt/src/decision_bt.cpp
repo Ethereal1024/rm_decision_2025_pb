@@ -30,6 +30,7 @@ void DecisionBT::register_basic_nodes(RMBT::BehaviorTreeFactory& factory) {
     factory.registerNodeType<MoveToPoint, DecisionBT>("MoveToPoint", this);
     factory.registerNodeType<RotateToAngle, DecisionBT>("RotateToAngle", this);
     factory.registerNodeType<RotateToVec, DecisionBT>("RotateToVec", this);
+    factory.registerNodeType<Spin, DecisionBT>("Spin", this);
     factory.registerNodeType<PointAchieved, DecisionBT>("PointAchieved", this);
     factory.registerNodeType<AngleAchieved, DecisionBT>("AngleAchieved", this);
 }
@@ -70,17 +71,14 @@ void DecisionBT::rotate_to_vec(const PlaneCoordinate& vec) const {
     DecisionBeta::rotate_to_vec(vec);
 }
 
+void DecisionBT::set_angular_velocity(const double& speed) const {
+    DecisionBeta::set_angular_velocity(speed);
+}
+
 PlaneCoordinate DecisionBT::get_current_coordinate() const {
     return DecisionBeta::get_current_coordinate();
 }
 
 double DecisionBT::get_current_angle() const {
     return DecisionBeta::get_current_angle();
-}
-
-void DecisionBT::test_display(const char* format, ...) const {
-    va_list args;
-    va_start(args, format);
-    DecisionBeta::test_display(format, args);
-    va_end(args);
 }

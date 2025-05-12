@@ -17,11 +17,11 @@ public:
 
     void rotate_to_vec(const PlaneCoordinate& vec) const;
 
+    void set_angular_velocity(const double& speed) const;
+
     PlaneCoordinate get_current_coordinate() const;
 
     double get_current_angle() const;
-
-    void test_display(const char* format, ...) const;
 
 protected:
     virtual void register_nodes(RMBT::BehaviorTreeFactory& factory);
