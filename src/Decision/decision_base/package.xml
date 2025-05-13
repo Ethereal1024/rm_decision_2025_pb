@@ -13,6 +13,7 @@
   <depend>rclcpp_components</depend>
   <depend>geometry_msgs</depend>
   <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
   <depend>information_widgets</depend>
   <depend>navigator_interfaces</depend>
   <depend>test_taker_interfaces</depend>
