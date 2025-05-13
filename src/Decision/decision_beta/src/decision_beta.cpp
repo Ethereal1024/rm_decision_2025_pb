@@ -24,7 +24,7 @@ void DecisionBeta::rotate_to_angle(const double& targetAngle) const {
         lastTime = currentTime;
 
         double currentAngle = get_current_angle();
-        RCLCPP_INFO(this->get_logger(), "Current angle: %.3f", currentAngle);
+        // RCLCPP_INFO(this->get_logger(), "Current angle: %.3f", currentAngle);
         double error = targetAngle - currentAngle;
 
         if (error > PI) {
@@ -32,7 +32,7 @@ void DecisionBeta::rotate_to_angle(const double& targetAngle) const {
         } else if (error < -PI) {
             error += 2 * PI;
         }
-        RCLCPP_INFO(this->get_logger(), "Error value: %.3f", error);
+        // RCLCPP_INFO(this->get_logger(), "Error value: %.3f", error);
 
         if (std::abs(error) < TOLARANCE || (this->now() - start_time).seconds() > TIME_LIMIT) {
             set_angular_velocity(0.0);
@@ -78,10 +78,10 @@ void DecisionBeta::move_to_point(const PlaneCoordinate& targetPoint) const {
         lastTime = currentTime;
 
         PlaneCoordinate currentCoordinate = get_current_coordinate();
-        RCLCPP_INFO(this->get_logger(), "Current coordinate: (%.3f, %.3f)", currentCoordinate.x, currentCoordinate.y);
+        // RCLCPP_INFO(this->get_logger(), "Current coordinate: (%.3f, %.3f)", currentCoordinate.x, currentCoordinate.y);
         PlaneCoordinate error = targetPoint - currentCoordinate;
 
-        RCLCPP_INFO(this->get_logger(), "Error value: (%.3f, %.3f)", error.x, error.y);
+        // RCLCPP_INFO(this->get_logger(), "Error value: (%.3f, %.3f)", error.x, error.y);
 
         if (currentCoordinate.coincide_with(targetPoint, TOLARANCE) || (this->now() - start_time).seconds() > TIME_LIMIT) {
             set_linear_velocity(PlaneCoordinate(0.0, 0.0));
@@ -93,7 +93,6 @@ void DecisionBeta::move_to_point(const PlaneCoordinate& targetPoint) const {
 
         PlaneCoordinate mapV = KP * error + KI * integral + KD * derivative;
         double theta = get_current_angle();
-        RCLCPP_INFO(this->get_logger(), "%.3f", theta);
         PlaneCoordinate linearV = PlaneCoordinate(
             mapV.x * cos(theta) + mapV.y * sin(theta), -mapV.x * sin(theta) + mapV.y * cos(theta));
         set_linear_velocity(linearV);

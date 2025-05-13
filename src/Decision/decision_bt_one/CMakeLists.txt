@@ -51,9 +51,11 @@ endif ()
 ament_auto_package(
         INSTALL_TO_SHARE
         config
+        launch
 )
 
 install(DIRECTORY
         config
+        launch
         DESTINATION share/${PROJECT_NAME}
 )

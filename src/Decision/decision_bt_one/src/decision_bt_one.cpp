@@ -2,6 +2,11 @@
 
 DecisionBTOne::DecisionBTOne(const rclcpp::NodeOptions& options)
     : RMDecision::DecisionBT(7, "decision", options) {
+    this->declare_parameter<std::string>("faction", "RED");
+    std::string faction = this->get_parameter("faction").as_string();
+    faction_ = faction == "RED" ? RMDecision::Faction::RED : RMDecision::Faction::BLUE;
+    RCLCPP_INFO(this->get_logger(), "Faction: %s", faction.c_str());
+
     pose_sub_ = this->create_subscription<geometry_msgs::msg::PoseStamped>(
         "navigator/current_pose", 10, std::bind(&DecisionBTOne::pose_sub_callback, this, std::placeholders::_1));
     hp_sub_ = this->create_subscription<pb_rm_interfaces::msg::GameRobotHP>(
@@ -17,12 +22,24 @@ std::string DecisionBTOne::bt_file_path() {
     return share_dir + "/config/bt_one.xml";
 }
 
+void DecisionBTOne::register_nodes(RMDecision::RMBT::BehaviorTreeFactory& factory) {
+    factory.registerNodeType<GameRunning, DecisionBTOne>("GameRunning", this);
+}
+
 void DecisionBTOne::pose_sub_callback(const geometry_msgs::msg::PoseStamped::SharedPtr msg) {
     prism_.self->pose = *msg;
 }
 
 void DecisionBTOne::hp_sub_callback(const pb_rm_interfaces::msg::GameRobotHP::SharedPtr msg) {
-    prism_.self->hp = msg->blue_7_robot_hp;
+    if (faction_ == RMDecision::Faction::RED) {
+        prism_.self->hp = msg->red_7_robot_hp;
+        enemy_outpost_hp_ = msg->blue_outpost_hp;
+        self_base_hp_ = msg->red_base_hp;
+    } else {
+        prism_.self->hp = msg->blue_7_robot_hp;
+        enemy_outpost_hp_ = msg->red_outpost_hp;
+        self_base_hp_ = msg->blue_base_hp;
+    }
 }
 
 void DecisionBTOne::game_sub_callback(const pb_rm_interfaces::msg::GameStatus::SharedPtr msg) {
