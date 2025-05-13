@@ -2,9 +2,9 @@
 using namespace RMDecision;
 
 void DecisionBeta::rotate_to_angle(const double& targetAngle) const {
-    const double KP = 1.0;
-    const double KI = 0.2;
-    const double KD = 0.001;
+    const double KP = 0.8;
+    const double KI = 0.15;
+    const double KD = 0.02;
 
     const double TOLARANCE = 0.01;
     const double RATE = 100;
@@ -27,9 +27,10 @@ void DecisionBeta::rotate_to_angle(const double& targetAngle) const {
         // RCLCPP_INFO(this->get_logger(), "Current angle: %.3f", currentAngle);
         double error = targetAngle - currentAngle;
 
-        if (error > PI) {
+        while (error > PI) {
             error -= 2 * PI;
-        } else if (error < -PI) {
+        }
+        while (error < -PI) {
             error += 2 * PI;
         }
         // RCLCPP_INFO(this->get_logger(), "Error value: %.3f", error);
