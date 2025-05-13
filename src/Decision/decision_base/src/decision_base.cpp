@@ -23,6 +23,7 @@ DecisionBase::DecisionBase(uint selfId, std::string nodeName, const rclcpp::Node
     nav_pub_ = this->create_publisher<navigator_interfaces::msg::Navigate>("to_navigator", 10, pubOpt);
     nav_vel_pub_ = this->create_publisher<std_msgs::msg::Float32MultiArray>("nav_vel", 10, pubOpt);
     angle_pub_ = this->create_publisher<std_msgs::msg::Float32>("angular_cmd_vel", 10, pubOpt);
+    cmd_gimbal_joint_pub_ = this->create_publisher<sensor_msgs::msg::JointState>("cmd_gimbal_joint", 10, pubOpt);
     test_feedback_pub_ = this->create_publisher<std_msgs::msg::String>("test_feedback", 10, pubOpt);
 
     linear_offset_ = PlaneCoordinate(0, 0);
@@ -85,6 +86,15 @@ void DecisionBase::set_angular_velocity(const double& angularV) const {
     std_msgs::msg::Float32 msg;
     msg.data = angularV;
     angle_pub_->publish(msg);
+}
+
+void DecisionBase::set_gimbal_state(const double& pitch, const double& yaw) const {
+    sensor_msgs::msg::JointState msg;
+    msg.header.stamp = this->now();
+    msg.header.frame_id = "gimbal";
+    msg.name = {"gimbal_pitch_joint", "gimbal_yaw_joint"};
+    msg.position = {pitch, yaw};
+    cmd_gimbal_joint_pub_->publish(msg);
 }
 
 void DecisionBase::set_linear_offset(const PlaneCoordinate& offset) {

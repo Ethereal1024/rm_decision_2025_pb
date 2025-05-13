@@ -11,6 +11,7 @@
 #include "iw_interfaces/msg/prism.hpp"
 #include "navigator_interfaces/msg/navigate.hpp"
 #include "rclcpp/rclcpp.hpp"
+#include "sensor_msgs/msg/joint_state.hpp"
 #include "std_msgs/msg/float32.hpp"
 #include "std_msgs/msg/float32_multi_array.hpp"
 #include "std_msgs/msg/string.hpp"
@@ -35,6 +36,8 @@ protected:
     void set_linear_velocity(const PlaneCoordinate& vec) const;
 
     void set_angular_velocity(const double& angularV) const;
+
+    void set_gimbal_state(const double& pitch, const double& yaw) const;
 
     PlaneCoordinate get_current_coordinate() const;
 
@@ -71,6 +74,7 @@ private:
     rclcpp::Publisher<navigator_interfaces::msg::Navigate>::SharedPtr nav_pub_;
     rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr nav_vel_pub_;
     rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr angle_pub_;
+    rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr cmd_gimbal_joint_pub_;
     rclcpp::Publisher<std_msgs::msg::String>::SharedPtr test_feedback_pub_;
 
     rclcpp::CallbackGroup::SharedPtr callback_group_;
