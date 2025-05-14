@@ -27,11 +27,11 @@ void DecisionBeta::rotate_to_angle(const double& targetAngle) const {
         // RCLCPP_INFO(this->get_logger(), "Current angle: %.3f", currentAngle);
         double error = targetAngle - currentAngle;
 
-        while (error > PI) {
-            error -= 2 * PI;
+        while (error > M_PI) {
+            error -= 2 * M_PI;
         }
-        while (error < -PI) {
-            error += 2 * PI;
+        while (error < -M_PI) {
+            error += 2 * M_PI;
         }
         // RCLCPP_INFO(this->get_logger(), "Error value: %.3f", error);
 

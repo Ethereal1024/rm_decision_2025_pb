@@ -23,8 +23,6 @@ public:
 
     void test_display(const char* format, ...) const;
 
-    const double PI = 3.1415926585;
-
 protected:
     void nav_to_point(const double& x, const double& y, bool instant = true) const;
 
