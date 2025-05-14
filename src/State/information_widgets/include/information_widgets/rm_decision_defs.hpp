@@ -260,11 +260,13 @@ public:
         }
     }
 
-    Area(const std::string& label_, const std::vector<iw_interfaces::msg::PlaneCoordinate>& msgvertices_) : Object(label_) {
-        for (const auto& planeCoordinateMsg : msgvertices_) {
-            vertices_.push_back(PlaneCoordinate(planeCoordinateMsg));
+    Area(const std::string& label, const std::vector<iw_interfaces::msg::PlaneCoordinate>& msgvertices) : Object(label) {
+        for (const auto& planeCoordinateMsg : msgvertices) {
+            vertices_.emplace_back(PlaneCoordinate(planeCoordinateMsg));
         }
     }
+
+    Area(const std::string& label, const std::vector<PlaneCoordinate>& points) : Object(label), vertices_(points) {}
 
     static void array_to_area(const std::vector<double>& doubleArray, Area& area) {
         assert((doubleArray.size() & 1) == 0 && "Extra Parameter ERROR");
@@ -272,7 +274,7 @@ public:
             PlaneCoordinate coordinate;
             coordinate.x = doubleArray[i];
             coordinate.y = doubleArray[i + 1];
-            area.vertices_.push_back(coordinate);
+            area.vertices_.emplace_back(coordinate);
         }
     }
 
@@ -369,10 +371,6 @@ public:
     void update_from_message(const iw_interfaces::msg::Architecture msg) {
         hp = msg.hp;
     }
-
-    // bool contain(PlaneCoordinate point) {
-
-    // }
 };
 
 namespace DefaultInfo {
