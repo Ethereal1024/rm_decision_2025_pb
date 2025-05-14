@@ -16,6 +16,8 @@ private:
 
     void move_to_point_test(const std::vector<float>& args);
 
+    void set_gimbal_state_test(const std::vector<float>& args);
+
     void get_current_point_test(const std::vector<float>& args);
 
     void get_current_angle_test(const std::vector<float>& args);

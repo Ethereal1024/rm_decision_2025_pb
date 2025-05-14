@@ -10,8 +10,8 @@
 #include "iw_interfaces/msg/chessboard.hpp"
 #include "iw_interfaces/msg/prism.hpp"
 #include "navigator_interfaces/msg/navigate.hpp"
+#include "pb_rm_interfaces/msg/gimbal_cmd.hpp"
 #include "rclcpp/rclcpp.hpp"
-#include "sensor_msgs/msg/joint_state.hpp"
 #include "std_msgs/msg/float32.hpp"
 #include "std_msgs/msg/float32_multi_array.hpp"
 #include "std_msgs/msg/string.hpp"
@@ -72,7 +72,7 @@ private:
     rclcpp::Publisher<navigator_interfaces::msg::Navigate>::SharedPtr nav_pub_;
     rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr nav_vel_pub_;
     rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr angle_pub_;
-    rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr cmd_gimbal_joint_pub_;
+    rclcpp::Publisher<pb_rm_interfaces::msg::GimbalCmd>::SharedPtr cmd_gimbal_pub_;  // TODO: 把 pb_rm_interfaces 从这里解耦
     rclcpp::Publisher<std_msgs::msg::String>::SharedPtr test_feedback_pub_;
 
     rclcpp::CallbackGroup::SharedPtr callback_group_;
