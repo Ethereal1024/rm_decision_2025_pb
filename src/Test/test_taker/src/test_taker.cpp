@@ -39,8 +39,6 @@ public:
             args.push_back(num);
         }
 
-        RCLCPP_INFO(
-            this->get_logger(), "Executing: %s", input.c_str());
         test_taker_interfaces::msg::TestArgs test_msg;
         test_msg.instruction = instruction;
         test_msg.args = args;
@@ -59,13 +57,13 @@ private:
             std::filesystem::create_directory(log_folder_path_);
         }
 
-        log_file_path_ = log_folder_path_ + "/test_logs.txt";
-
         auto now = std::chrono::system_clock::now();
         auto now_c = std::chrono::system_clock::to_time_t(now);
         char buffer[80];
         std::strftime(buffer, sizeof(buffer), "%Y-%m-%d-%H:%M:%S", std::localtime(&now_c));
         log_time_ = buffer;
+
+        log_file_path_ = log_folder_path_ + "/test_logs_" + log_time_ + ".txt";
 
         log_file_.open(log_file_path_, std::ios::app);
         if (log_file_.is_open()) {

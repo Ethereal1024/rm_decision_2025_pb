@@ -9,6 +9,10 @@ public:
 
     bool game_running() const;
 
+    bool outpost_shutdown() const;
+
+    uint self_hp() const;
+
 private:
     void pose_sub_callback(const geometry_msgs::msg::PoseStamped::SharedPtr msg);
 
@@ -36,5 +40,34 @@ public:
 
     BT::NodeStatus tick() override {
         return host_->game_running() ? BT::NodeStatus::SUCCESS : BT::NodeStatus::FAILURE;
+    }
+};
+
+class OutpostShutdown : public RMDecision::RMBT::ConditionNode<DecisionBTOne> {
+public:
+    OutpostShutdown(const std::string& name, DecisionBTOne* host)
+        : RMDecision::RMBT::ConditionNode<DecisionBTOne>(name, host, {}) {}
+
+    BT::NodeStatus tick() override {
+        return host_->outpost_shutdown() ? BT::NodeStatus::SUCCESS : BT::NodeStatus::FAILURE;
+    }
+};
+
+class HPLow : public RMDecision::RMBT::ConditionNode<DecisionBTOne> {
+public:
+    HPLow(const std::string& name, DecisionBTOne* host, const BT::NodeConfig& config)
+        : RMDecision::RMBT::ConditionNode<DecisionBTOne>(name, host, config) {}
+
+    static BT::PortsList providedPorts() {
+        return {BT::InputPort<uint>("threshold")};
+    }
+
+    BT::NodeStatus tick() override {
+        BT::Expected<uint> threshold = getInput<uint>("threshold");
+        if (!threshold) {
+            throw BT::RuntimeError("missing required input [threshold]: ", threshold.error());
+        }
+
+        return host_->self_hp() < threshold.value() ? BT::NodeStatus::SUCCESS : BT::NodeStatus::FAILURE;
     }
 };

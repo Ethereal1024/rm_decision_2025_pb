@@ -24,6 +24,8 @@ std::string DecisionBTOne::bt_file_path() {
 
 void DecisionBTOne::register_nodes(RMDecision::RMBT::BehaviorTreeFactory& factory) {
     factory.registerNodeType<GameRunning, DecisionBTOne>("GameRunning", this);
+    factory.registerNodeType<OutpostShutdown, DecisionBTOne>("OutpostShutdown", this);
+    factory.registerNodeType<HPLow, DecisionBase>("HPLow", this);
 }
 
 void DecisionBTOne::pose_sub_callback(const geometry_msgs::msg::PoseStamped::SharedPtr msg) {
@@ -48,6 +50,14 @@ void DecisionBTOne::game_sub_callback(const pb_rm_interfaces::msg::GameStatus::S
 
 bool DecisionBTOne::game_running() const {
     return prism_.game->game_start;
+}
+
+bool DecisionBTOne::outpost_shutdown() const {
+    return enemy_outpost_hp_ == 0;
+}
+
+uint DecisionBTOne::self_hp() const {
+    return prism_.self->hp;
 }
 
 #include "rm_decision_macros/decision_node_regist_macro.hpp"
