@@ -14,7 +14,9 @@ DecisionTestAlpha::DecisionTestAlpha(const rclcpp::NodeOptions& options)
         {"SAV", std::bind(&DecisionTestAlpha::set_angular_velocity_test, this, std::placeholders::_1)},
         {"SLV", std::bind(&DecisionTestAlpha::set_linear_velocity_test, this, std::placeholders::_1)},
         {"MOV", std::bind(&DecisionTestAlpha::move_to_point_test, this, std::placeholders::_1)},
+        {"SGS", std::bind(&DecisionTestAlpha::set_gimbal_state_test, this, std::placeholders::_1)},
         {"GCP", std::bind(&DecisionTestAlpha::get_current_point_test, this, std::placeholders::_1)},
+        {"*", std::bind(&DecisionTestAlpha::get_current_point_test, this, std::placeholders::_1)},
         {"GCA", std::bind(&DecisionTestAlpha::get_current_angle_test, this, std::placeholders::_1)},
         {"SLO", std::bind(&DecisionTestAlpha::set_linear_offset_test, this, std::placeholders::_1)},
         {"SAO", std::bind(&DecisionTestAlpha::set_angular_offset_test, this, std::placeholders::_1)},
@@ -74,7 +76,7 @@ void DecisionTestAlpha::route_a() const {
 void DecisionTestAlpha::test_response(const std::string& instruction, const std::vector<float>& args) {
     auto it = test_funcs_.find(instruction);
     if (it == test_funcs_.end()) {
-        test_display("Instruction undefined.\n");
+        test_display("Instruction [ %s ] undefined.\n", instruction.c_str());
         return;
     }
 
@@ -113,6 +115,13 @@ void DecisionTestAlpha::move_to_point_test(const std::vector<float>& args) {
     if (args.size() == 2) {
         test_display("Moving to point: (%.3f, %.3f)\n", args[0], args[1]);
         move_to_point(RMDecision::PlaneCoordinate(args[0], args[1]));
+    }
+}
+
+void DecisionTestAlpha::set_gimbal_state_test(const std::vector<float>& args) {
+    if (args.size() == 2) {
+        test_display("Set gimbal state: pitch=%.3f, yaw=%.3f\n", args[0], args[1]);
+        set_gimbal_state(args[0], args[1]);
     }
 }
 
