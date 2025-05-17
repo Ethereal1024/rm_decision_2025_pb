@@ -221,12 +221,38 @@ public:
 
     Robot() = default;
 
-    Robot(std::string label, Faction faction, int id, geometry_msgs::msg::PoseStamped pose, uint hp, uint level) : Object(label), faction(faction), id(id), pose(pose), hp(hp), level(level) {}
+    Robot(std::string label,
+          Faction faction,
+          int id)
+        : Object(label),
+          faction(faction),
+          id(id),
+          pose(PoseStamped()),
+          hp(INF),
+          level(INF) {}
+
+    Robot(std::string label,
+          Faction faction,
+          int id,
+          PoseStamped pose,
+          uint hp,
+          uint level)
+        : Object(label),
+          faction(faction),
+          id(id),
+          pose(pose),
+          hp(hp),
+          level(level) {}
 
     Robot(const iw_interfaces::msg::Robot& msg)
-        : Object(msg.label), id(msg.id), pose(msg.pose), hp(msg.hp), level(msg.level), attack(msg.attack), missing(msg.missing) {
-        faction = static_cast<RMDecision::Faction>(msg.faction);
-    }
+        : Object(msg.label),
+          faction(static_cast<RMDecision::Faction>(msg.faction)),
+          id(msg.id),
+          pose(msg.pose),
+          hp(msg.hp),
+          level(msg.level),
+          attack(msg.attack),
+          missing(msg.missing) {}
 
     iw_interfaces::msg::Robot to_message() const {
         auto msg = iw_interfaces::msg::Robot();
@@ -375,7 +401,16 @@ public:
 
 namespace DefaultInfo {
 const std::unordered_map<std::string, RMDecision::Robot> robots = {
-    {"R7", Robot("R7", RED, 7, PoseStamped(), 600, 10)},
+    {"R1", Robot("R1", RED, 1)},
+    {"R2", Robot("R2", RED, 2)},
+    {"R3", Robot("R3", RED, 3)},
+    {"R4", Robot("R4", RED, 4)},
+    {"R7", Robot("R7", RED, 7)},
+    {"B1", Robot("B1", BLUE, 1)},
+    {"B2", Robot("B2", BLUE, 2)},
+    {"B3", Robot("B3", BLUE, 3)},
+    {"B4", Robot("B4", BLUE, 4)},
+    {"B7", Robot("B7", BLUE, 7)},
 };
 
 const std::unordered_map<std::string, std::vector<double>> terrains = {

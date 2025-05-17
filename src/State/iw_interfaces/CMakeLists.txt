@@ -19,6 +19,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Terrain.msg"
   "msg/Architecture.msg"
   "msg/Prism.msg"
+  "msg/PlanePose.msg"
   DEPENDENCIES geometry_msgs builtin_interfaces
 )
 
