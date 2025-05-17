@@ -1,10 +1,15 @@
 <root BTCPP_format="4">
 
     <BehaviorTree ID="MainTree">
-        <Sequence>
-            <!-- <SubTree ID="WaitForStart"/> -->
-            <SubTree ID="AttackOutpost"/>
-        </Sequence>
+        <RetryUntilSuccessful num_attempts="-1"> 
+            <SequenceWithMemory>
+                <SubTree ID="WaitForStart"/>
+                <Spin speed="0"/>
+                <HPLow threshold="390"/>
+                <Spin speed="-2"/>
+                <!-- <SubTree ID="AttackOutpost"/> -->
+            </SequenceWithMemory>
+        </RetryUntilSuccessful>
     </BehaviorTree>
 
     <BehaviorTree ID="WaitForStart">
