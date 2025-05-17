@@ -25,7 +25,7 @@ std::string DecisionBTOne::bt_file_path() {
 void DecisionBTOne::register_nodes(RMDecision::RMBT::BehaviorTreeFactory& factory) {
     factory.registerNodeType<GameRunning, DecisionBTOne>("GameRunning", this);
     factory.registerNodeType<OutpostShutdown, DecisionBTOne>("OutpostShutdown", this);
-    factory.registerNodeType<HPLow, DecisionBase>("HPLow", this);
+    factory.registerNodeType<HPLow, DecisionBTOne>("HPLow", this);
 }
 
 void DecisionBTOne::pose_sub_callback(const geometry_msgs::msg::PoseStamped::SharedPtr msg) {
