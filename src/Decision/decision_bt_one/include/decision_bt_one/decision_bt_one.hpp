@@ -67,7 +67,6 @@ public:
         if (!threshold) {
             throw BT::RuntimeError("missing required input [threshold]: ", threshold.error());
         }
-
         return host_->self_hp() < threshold.value() ? BT::NodeStatus::SUCCESS : BT::NodeStatus::FAILURE;
     }
 };

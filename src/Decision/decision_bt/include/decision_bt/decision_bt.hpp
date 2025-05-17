@@ -266,9 +266,9 @@ public:
 
     BT::NodeStatus onStart() override {
         if (!getInput<double>("speed", speed_)) {
-            throw BT::RuntimeError("missing required input [RotateToVec]");
+            throw BT::RuntimeError("missing required input [Spin]");
         }
-        host_->test_display("[ RotateToVec: STARTED ]\n");
+        host_->test_display("[ Spin: STARTED ]\n");
         host_->set_angular_velocity(speed_);
         return BT::NodeStatus::RUNNING;
     }

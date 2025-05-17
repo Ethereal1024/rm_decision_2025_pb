@@ -14,6 +14,8 @@ DecisionBTOne::DecisionBTOne(const rclcpp::NodeOptions& options)
     game_sub_ = this->create_subscription<pb_rm_interfaces::msg::GameStatus>(
         "referee/game_status", 10, std::bind(&DecisionBTOne::game_sub_callback, this, std::placeholders::_1));
 
+    prism_.self->hp = 400;
+
     this->awaken();
 }
 
