@@ -19,6 +19,10 @@ public:
     uint ammo;
     uint shooter_heat;
     PoseStamped pose;
+    struct {
+        double pitch;
+        double yaw;
+    } gimbal;
 };
 
 class Track {
@@ -49,7 +53,7 @@ public:
     Prism(const iw_interfaces::msg::Prism& msg);
 
     std::unordered_map<std::string, double> parameters;
-    
+
     std::shared_ptr<Self> self;
     std::shared_ptr<Track> track;
     std::shared_ptr<Game> game;

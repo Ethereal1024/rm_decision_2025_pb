@@ -1,5 +1,6 @@
 #include "pb_rm_interfaces/msg/game_robot_hp.hpp"
 #include "pb_rm_interfaces/msg/game_status.hpp"
+#include "pb_rm_interfaces/msg/ground_robot_position.hpp"
 #include "pb_rm_interfaces/msg/robot_status.hpp"
 #include "state_base/state_base.hpp"
 
@@ -40,7 +41,6 @@ public:
     }
 };
 
-
 class GameStatusUpdateHandler
     : public UpdateHandler<pb_rm_interfaces::msg::GameStatus> {
 public:
@@ -58,7 +58,6 @@ public:
         prism_ptr_->game->game_start = (msg->game_progress == msg->RUNNING);
     }
 };
-
 
 class RobotStatusUpdateHandler
     : public UpdateHandler<pb_rm_interfaces::msg::RobotStatus> {
@@ -90,5 +89,19 @@ public:
         prism_ptr_->self->pose.header.frame_id = "map";
         prism_ptr_->self->pose.header.stamp = clock_->now();
         prism_ptr_->self->pose.pose = msg->robot_pos;
+    }
+};
+
+class RobotPositionsUpdateHandler
+    : public UpdateHandler<pb_rm_interfaces::msg::GroundRobotPosition> {
+public:
+    using UpdateHandler::UpdateHandler;
+
+    std::string topic() const override {
+        return "referee/ground_robot_position";
+    }
+
+    void update_chessboard(const pb_rm_interfaces::msg::GroundRobotPosition::SharedPtr msg) const override {
+        // chessboard_ptr_->friend_robot(1)->pose =
     }
 };
