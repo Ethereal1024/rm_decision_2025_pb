@@ -67,7 +67,7 @@ private:
 
         log_file_.open(log_file_path_, std::ios::app);
         if (log_file_.is_open()) {
-            log_file_ << "\n\n[" << log_time_ << "]" << std::endl;
+            log_file_ << "[" << log_time_ << "]" << std::endl;
             log_file_.close();
         } else {
             RCLCPP_ERROR(this->get_logger(), "Failed to open file: %s", log_file_path_.c_str());

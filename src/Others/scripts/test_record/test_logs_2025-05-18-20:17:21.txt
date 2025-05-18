@@ -1,0 +1,28 @@
+[2025-05-18-20:17:21]
+>>> NAV 0 0
+<<< Navigating to point: (0.000, 0.000)
+
+>>> GCP
+<<< Current point: (-4.230, 1.179)
+
+>>> NAV 0 0
+<<< Navigating to point: (0.000, 0.000)
+
+>>> NAV -4.2 1.2
+<<< Navigating to point: (-4.200, 1.200)
+
+>>> SAV 2
+<<< Set angular velocity: 2.000
+
+>>> NAV 0 0
+<<< Navigating to point: (0.000, 0.000)
+
+>>> SAV 0
+<<< Set angular velocity: 0.000
+
+>>> NAV -4.2 1.2
+<<< Navigating to point: (-4.200, 1.200)
+
+>>> NAV 0 0
+<<< Navigating to point: (0.000, 0.000)
+

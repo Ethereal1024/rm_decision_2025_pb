@@ -1,0 +1,13 @@
+[2025-05-18-20:56:05]
+>>> GCP
+<<< Current point: (1.171, -2.866)
+
+>>> GCP
+<<< Current point: (1.246, -2.207)
+
+>>> GCP
+<<< Current point: (0.553, -2.419)
+
+>>> NAV 0 0
+<<< Navigating to point: (0.000, 0.000)
+

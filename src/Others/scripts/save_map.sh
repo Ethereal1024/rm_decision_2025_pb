@@ -1,4 +1,7 @@
 #!/bin/bash
+
+read -p '按 [Enter] 保存地图...' key
+
 set -e
 
 MAP_DIR="../saved_maps"
