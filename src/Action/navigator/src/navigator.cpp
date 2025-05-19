@@ -13,7 +13,7 @@ Navigator::Navigator(const rclcpp::NodeOptions& options) : Node("navigator", opt
         "nav_vel", 10, std::bind(&Navigator::vel_callback, this, std::placeholders::_1), sub_opt);
 
     current_pose_pub_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("navigator/current_pose", 10, pub_opt);
-    vel_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10, pub_opt);
+    vel_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("linear_cmd_vel", 10, pub_opt);
 
     nav_to_pose_client_ = rclcpp_action::create_client<nav2_msgs::action::NavigateToPose>(this, "navigate_to_pose", callback_group_);
     send_goal_options_.goal_response_callback = std::bind(&Navigator::goal_response_callback, this,

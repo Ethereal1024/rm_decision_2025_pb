@@ -1,0 +1,28 @@
+[2025-05-18-20:23:39]
+>>> SAV 3
+<<< Set angular velocity: 3.000
+
+>>> GCP
+<<< Current point: (-4.958, 0.901)
+
+>>> NAV 0 0
+<<< Navigating to point: (0.000, 0.000)
+
+>>> NAV 0 0
+<<< Navigating to point: (0.000, 0.000)
+
+>>> NAV -5 1
+<<< Navigating to point: (-5.000, 1.000)
+
+>>> NAV 0 0
+<<< Navigating to point: (0.000, 0.000)
+
+>>> GCP
+<<< Current point: (0.128, 0.408)
+
+>>> GCP
+<<< Current point: (-0.513, -0.120)
+
+>>> GCP
+<<< Current point: (-0.631, 0.449)
+

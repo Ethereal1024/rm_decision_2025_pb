@@ -1,6 +1,6 @@
 <root BTCPP_format="4">
 
-    <BehaviorTree ID="MainTree">
+    <BehaviorTree ID="MTree">
         <RetryUntilSuccessful num_attempts="-1"> 
             <SequenceWithMemory>
                 <SubTree ID="WaitForStart"/>
@@ -10,6 +10,23 @@
                 <!-- <SubTree ID="AttackOutpost"/> -->
             </SequenceWithMemory>
         </RetryUntilSuccessful>
+    </BehaviorTree>
+
+    <BehaviorTree ID="MainTree">
+        <Repeat num_cycles="-1"> 
+            <Sequence>
+                <Spin speed="-3"/>
+                <Delay delay_msec="10000">
+                    <MoveToPoint targetPoint="1.279;0.150"/>
+                </Delay>
+                <Delay delay_msec="10000">
+                    <MoveToPoint targetPoint="2.259;-0.244"/>
+                </Delay>
+                <Delay delay_msec="10000">
+                    <MoveToPoint targetPoint="2.413;1.122"/>
+                </Delay>
+            </Sequence>
+        </Repeat>
     </BehaviorTree>
 
     <BehaviorTree ID="WaitForStart">

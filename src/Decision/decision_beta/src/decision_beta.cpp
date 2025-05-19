@@ -58,8 +58,8 @@ void DecisionBeta::rotate_to_vec(const PlaneCoordinate& vec) const {
 }
 
 void DecisionBeta::move_to_point(const PlaneCoordinate& targetPoint) const {
-    const double KP = 0.8;
-    const double KI = 0.03;
+    const double KP = 1.0;
+    const double KI = 0.3;
     const double KD = 0.001;
 
     const double TOLARANCE = 0.08;
