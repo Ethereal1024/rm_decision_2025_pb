@@ -3,9 +3,9 @@
 #include "pb_rm_interfaces/msg/game_robot_hp.hpp"
 #include "pb_rm_interfaces/msg/game_status.hpp"
 
-class DecisionBTOne : public RMDecision::DecisionBT {
+class DecisionBTOneSim : public RMDecision::DecisionBT {
 public:
-    explicit DecisionBTOne(const rclcpp::NodeOptions& options);
+    explicit DecisionBTOneSim(const rclcpp::NodeOptions& options);
 
     bool game_running() const;
 
@@ -20,8 +20,6 @@ private:
 
     void game_sub_callback(const pb_rm_interfaces::msg::GameStatus::SharedPtr msg);
 
-    void gcp_timer_callback() const;
-
     std::string bt_file_path() override;
 
     void register_nodes(RMDecision::RMBT::BehaviorTreeFactory& factory) override;
@@ -30,37 +28,35 @@ private:
     rclcpp::Subscription<pb_rm_interfaces::msg::GameRobotHP>::SharedPtr hp_sub_;
     rclcpp::Subscription<pb_rm_interfaces::msg::GameStatus>::SharedPtr game_sub_;
 
-    rclcpp::TimerBase::SharedPtr gcp_timer_;
-
     double enemy_outpost_hp_;
     double self_base_hp_;
     RMDecision::Faction faction_;
 };
 
-class GameRunning : public RMDecision::RMBT::ConditionNode<DecisionBTOne> {
+class GameRunning : public RMDecision::RMBT::ConditionNode<DecisionBTOneSim> {
 public:
-    GameRunning(const std::string& name, DecisionBTOne* host)
-        : RMDecision::RMBT::ConditionNode<DecisionBTOne>(name, host, {}) {}
+    GameRunning(const std::string& name, DecisionBTOneSim* host)
+        : RMDecision::RMBT::ConditionNode<DecisionBTOneSim>(name, host, {}) {}
 
     BT::NodeStatus tick() override {
         return host_->game_running() ? BT::NodeStatus::SUCCESS : BT::NodeStatus::FAILURE;
     }
 };
 
-class OutpostShutdown : public RMDecision::RMBT::ConditionNode<DecisionBTOne> {
+class OutpostShutdown : public RMDecision::RMBT::ConditionNode<DecisionBTOneSim> {
 public:
-    OutpostShutdown(const std::string& name, DecisionBTOne* host)
-        : RMDecision::RMBT::ConditionNode<DecisionBTOne>(name, host, {}) {}
+    OutpostShutdown(const std::string& name, DecisionBTOneSim* host)
+        : RMDecision::RMBT::ConditionNode<DecisionBTOneSim>(name, host, {}) {}
 
     BT::NodeStatus tick() override {
         return host_->outpost_shutdown() ? BT::NodeStatus::SUCCESS : BT::NodeStatus::FAILURE;
     }
 };
 
-class HPLow : public RMDecision::RMBT::ConditionNode<DecisionBTOne> {
+class HPLow : public RMDecision::RMBT::ConditionNode<DecisionBTOneSim> {
 public:
-    HPLow(const std::string& name, DecisionBTOne* host, const BT::NodeConfig& config)
-        : RMDecision::RMBT::ConditionNode<DecisionBTOne>(name, host, config) {}
+    HPLow(const std::string& name, DecisionBTOneSim* host, const BT::NodeConfig& config)
+        : RMDecision::RMBT::ConditionNode<DecisionBTOneSim>(name, host, config) {}
 
     static BT::PortsList providedPorts() {
         return {BT::InputPort<uint>("threshold")};
@@ -71,7 +67,7 @@ public:
         if (!threshold) {
             throw BT::RuntimeError("missing required input [threshold]: ", threshold.error());
         }
-        host_->test_display("%d", host_->self_hp());
+        host_->test_display("%d/n", host_->self_hp());
         return host_->self_hp() < threshold.value() ? BT::NodeStatus::SUCCESS : BT::NodeStatus::FAILURE;
     }
 };
