@@ -1,20 +1,8 @@
 <root BTCPP_format="4">
 
-    <BehaviorTree ID="ManTree">
-        <Sequence>
-            <SubTree ID="WaitForStart"/>
-            <Fallback>
-                <RetryUntilSuccessful num_attempts="5"> 
-                    <SubTree ID="AttackRightFlank"/>
-                </RetryUntilSuccessful>
-                <Spin speed="-3.14"/>
-            </Fallback>
-        </Sequence>
-    </BehaviorTree>
-
     <BehaviorTree ID="MainTree">
         <Sequence>
-            <SubTree ID="WaitForStart"/>
+            <SubTree ID="WaitForStartSim"/>
             <Repeat num_cycles="-1">
                 <Sequence>
                     <ReactiveFallback>
@@ -39,8 +27,8 @@
                         <SubTree ID="AttackRightFlank"/>
                     </Fallback>
                     <SubTree ID="WaitForOutpostShutdown"/>
-                    <RotateToAngle targetAngle="0.76"/>
-                    <NavToPoint targetPoint="9.1;2.8"/>
+                    <NavToPoint targetPoint="4.9;1.1"/>
+                    <SubTree ID="ForceSpin"/>
                     <SubTree ID="OccupyHighGround"/>
                 </SequenceWithMemory>
             </RetryUntilSuccessful>
@@ -100,23 +88,32 @@
         </RetryUntilSuccessful>
     </BehaviorTree>
 
+    <BehaviorTree ID="ForceSpin">
+        <Repeat num_cycles="5">
+            <Delay delay_msec="1000">
+                <Spin speed="-3.14"/>
+            </Delay>
+        </Repeat>
+    </BehaviorTree>
+
     <BehaviorTree ID="AttackLeftFlank">
         <Sequence>
             <RotateToAngle targetAngle="0.76"/>
-            <NavToPoint targetPoint="8.5;6.7"/>
-            <Fallback name="move_up">
+            <NavToPoint targetPoint="2.8;1.9"/>
+            <Fallback name="move_up">                
                 <Sequence name="basic_sequence">
-                    <MoveToPoint targetPoint="11.6;6.8"/>
-                    <NavToPoint targetPoint="10.9;6.7"/>
+                    <MoveToPoint targetPoint="5.7;1.9"/>
+                    <NavToPoint targetPoint="4.6;1.9"/>
                     <Spin speed="-3.14"/>
                 </Sequence>
                 <RetryUntilSuccessful num_attempts="3">
                     <Sequence name="retry_sequence">
-                        <MoveToPoint targetPoint="8.5;6.7"/>
+                        <MoveToPoint targetPoint="2.8;1.9"/>
                         <RotateToAngle targetAngle="0.76"/>
-                        <MoveToPoint targetPoint="11.6;6.8"/>
-                        <NavToPoint targetPoint="10.9;6.7"/>
-                        <Spin speed="-3.14"/>
+                        <MoveToPoint targetPoint="5.7;1.9"/>
+                        <NavToPoint targetPoint="4.6;1.9"/>
+                        <!-- <Spin speed="-3.14"/> -->
+                        <SubTree ID="ForceSpin"/>
                     </Sequence>
                 </RetryUntilSuccessful>
             </Fallback>
@@ -125,50 +122,52 @@
 
     <BehaviorTree ID="AttackRightFlank">
         <Sequence>
-            <NavToPoint targetPoint="5.0;-4.0"/>
+            <NavToPoint targetPoint="3.7;-1.3"/>
             <RotateToAngle targetAngle="0"/>
             <Fallback name="move_up">
-                <MoveToPoint targetPoint="1.5;-4.2"/>
+                <MoveToPoint targetPoint="0.9;-1.3"/>
                 <RetryUntilSuccessful num_attempts="3">
                     <Sequence name="retry_sequence">
-                        <MoveToPoint targetPoint="5.3;-4.0"/>
+                        <MoveToPoint targetPoint="3.7;-1.3"/>
                         <RotateToAngle targetAngle="0"/>
-                        <MoveToPoint targetPoint="1.5;-4.2"/>
+                        <MoveToPoint targetPoint="0.9;-1.3"/>
                     </Sequence>
                 </RetryUntilSuccessful>
             </Fallback>
-            <MoveToPoint targetPoint="1.5;-5.6"/>
+            <MoveToPoint targetPoint="0.9;-1.9"/>
             <RotateToAngle targetAngle="0"/>
-            <NavToPoint targetPoint="10.5;-3.1"/>
+            <NavToPoint targetPoint="4.9;1.1"/>
             <Spin speed="-3.14"/>
         </Sequence>
     </BehaviorTree>
 
     <BehaviorTree ID="OccupyHighGround">
-        <Repeat>
-            <Sequence>
-                <RotateToAngle targetAngle="0.76"/>
-                <Delay delay_msec="20000">
-                    <Sequence>
-                        <Spin speed="0"/>
-                        <NavToPoint targetPoint="12.0;-1.3"/>
-                        <Spin speed="-3.14"/>
-                    </Sequence>
-                </Delay>
-                <Delay delay_msec="20000">
-                    <Sequence>
-                        <Spin speed="0"/>
-                        <NavToPoint targetPoint="9.1;2.8"/>
-                        <Spin speed="-3.14"/>
-                    </Sequence>  
-                </Delay>
-            </Sequence>
-        </Repeat> 
+        <Sequence>
+            <RotateToAngle targetAngle="0.76"/>
+            <Repeat num_cycles="200">
+                <Sequence>
+                    <Delay delay_msec="20000">
+                        <Sequence>
+                            <Spin speed="0"/>
+                            <NavToPoint targetPoint="4.9;-0.4"/>
+                            <SubTree ID="ForceSpin"/>
+                        </Sequence>
+                    </Delay>
+                    <Delay delay_msec="20000">
+                        <Sequence>
+                            <Spin speed="0"/>
+                            <NavToPoint targetPoint="4.9;1.1"/>
+                            <SubTree ID="ForceSpin"/>
+                        </Sequence>  
+                    </Delay>
+                </Sequence>    
+            </Repeat> 
+        </Sequence>
     </BehaviorTree>
 
     <BehaviorTree ID="Home">
         <Sequence>
-            <NavToPoint targetPoint="-1.0;-4.2"/>
+            <NavToPoint targetPoint="-0.2;-1.9"/>
         </Sequence>
     </BehaviorTree>
 

@@ -14,6 +14,8 @@ DecisionBTOne::DecisionBTOne(const rclcpp::NodeOptions& options)
     game_sub_ = this->create_subscription<pb_rm_interfaces::msg::GameStatus>(
         "referee/game_status", 10, std::bind(&DecisionBTOne::game_sub_callback, this, std::placeholders::_1));
 
+    gcp_timer_ = this->create_wall_timer(std::chrono::seconds(1), std::bind(&DecisionBTOne::gcp_timer_callback, this));
+
     prism_.self->hp = 400;
 
     this->awaken();
@@ -32,6 +34,11 @@ void DecisionBTOne::register_nodes(RMDecision::RMBT::BehaviorTreeFactory& factor
 
 void DecisionBTOne::pose_sub_callback(const geometry_msgs::msg::PoseStamped::SharedPtr msg) {
     prism_.self->pose = *msg;
+}
+
+void DecisionBTOne::gcp_timer_callback() const {
+    auto p = get_current_coordinate();
+    test_display("* (%.3f, %.3f)\n", p.x, p.y);
 }
 
 void DecisionBTOne::hp_sub_callback(const pb_rm_interfaces::msg::GameRobotHP::SharedPtr msg) {
