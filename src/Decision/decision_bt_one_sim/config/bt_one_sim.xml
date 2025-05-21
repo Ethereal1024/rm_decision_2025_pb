@@ -2,13 +2,11 @@
 
     <BehaviorTree ID="MainTree">
         <Sequence>
-            <SubTree ID="WaitForStartSim"/>
+            <SubTree ID="WaitForStart"/>
             <Repeat num_cycles="-1">
                 <Sequence>
                     <ReactiveFallback>
-                        <Inverter>
-                            <HPLow threshold="200"/>
-                        </Inverter>
+                        <HPLow threshold="200"/>
                         <SubTree ID="PrimaryStrategy"/>
                     </ReactiveFallback>
                     <SubTree ID="Home"/>
@@ -143,7 +141,6 @@
 
     <BehaviorTree ID="OccupyHighGround">
         <Sequence>
-            <RotateToAngle targetAngle="0.76"/>
             <Repeat num_cycles="200">
                 <Sequence>
                     <Delay delay_msec="20000">
@@ -167,6 +164,7 @@
 
     <BehaviorTree ID="Home">
         <Sequence>
+            <Spin speed="0"/>
             <NavToPoint targetPoint="-0.2;-1.9"/>
         </Sequence>
     </BehaviorTree>
