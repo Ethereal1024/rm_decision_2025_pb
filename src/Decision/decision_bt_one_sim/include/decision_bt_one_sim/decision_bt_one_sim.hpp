@@ -20,6 +20,8 @@ private:
 
     void game_sub_callback(const pb_rm_interfaces::msg::GameStatus::SharedPtr msg);
 
+    void test_response(const std::string& instruction, const std::vector<float>& args) override;
+
     std::string bt_file_path() override;
 
     void register_nodes(RMDecision::RMBT::BehaviorTreeFactory& factory) override;
@@ -28,6 +30,7 @@ private:
     rclcpp::Subscription<pb_rm_interfaces::msg::GameRobotHP>::SharedPtr hp_sub_;
     rclcpp::Subscription<pb_rm_interfaces::msg::GameStatus>::SharedPtr game_sub_;
 
+    std::unordered_map<std::string, std::function<void(const std::vector<float>&)>> test_funcs_;
     double enemy_outpost_hp_;
     double self_base_hp_;
     RMDecision::Faction faction_;
@@ -67,7 +70,6 @@ public:
         if (!threshold) {
             throw BT::RuntimeError("missing required input [threshold]: ", threshold.error());
         }
-        host_->test_display("%d/n", host_->self_hp());
         return host_->self_hp() < threshold.value() ? BT::NodeStatus::SUCCESS : BT::NodeStatus::FAILURE;
     }
 };

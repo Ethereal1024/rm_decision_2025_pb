@@ -15,6 +15,11 @@ DecisionBTOneSim::DecisionBTOneSim(const rclcpp::NodeOptions& options)
         "referee/game_status", 10, std::bind(&DecisionBTOneSim::game_sub_callback, this, std::placeholders::_1));
 
     prism_.self->hp = 400;
+    enemy_outpost_hp_ = 1500;
+
+    // test_funcs_ = {
+    //     {"OSZ", std::bind(&DecisionTestAlpha::nav_to_point_test, this, std::placeholders::_1)},
+    // };
 
     this->awaken();
 }
@@ -44,6 +49,7 @@ void DecisionBTOneSim::hp_sub_callback(const pb_rm_interfaces::msg::GameRobotHP:
         enemy_outpost_hp_ = msg->red_outpost_hp;
         self_base_hp_ = msg->blue_base_hp;
     }
+    test_display("enemy_outpost_hp: %d", enemy_outpost_hp_);
 }
 
 void DecisionBTOneSim::game_sub_callback(const pb_rm_interfaces::msg::GameStatus::SharedPtr msg) {
@@ -55,11 +61,22 @@ bool DecisionBTOneSim::game_running() const {
 }
 
 bool DecisionBTOneSim::outpost_shutdown() const {
-    return enemy_outpost_hp_ == 0;
+    test_display("outpost_hp: %d", enemy_outpost_hp_);
+    return enemy_outpost_hp_ <= 5;
 }
 
 uint DecisionBTOneSim::self_hp() const {
     return prism_.self->hp;
+}
+
+void DecisionBTOneSim::test_response(const std::string& instruction, const std::vector<float>& args) {
+    auto it = test_funcs_.find(instruction);
+    if (it == test_funcs_.end()) {
+        test_display("Instruction [ %s ] undefined.\n", instruction.c_str());
+        return;
+    }
+
+    test_funcs_[instruction](args);
 }
 
 #include "rm_decision_macros/decision_node_regist_macro.hpp"
