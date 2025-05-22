@@ -13,10 +13,13 @@ DecisionBTOne::DecisionBTOne(const rclcpp::NodeOptions& options)
         "referee/all_robot_hp", 10, std::bind(&DecisionBTOne::hp_sub_callback, this, std::placeholders::_1));
     game_sub_ = this->create_subscription<pb_rm_interfaces::msg::GameStatus>(
         "referee/game_status", 10, std::bind(&DecisionBTOne::game_sub_callback, this, std::placeholders::_1));
+    status_sub_ = this->create_subscription<pb_rm_interfaces::msg::RobotStatus>(
+        "referee/robot_status", 10, std::bind(&DecisionBTOne::status_sub_callback, this, std::placeholders::_1));
 
     gcp_timer_ = this->create_wall_timer(std::chrono::seconds(1), std::bind(&DecisionBTOne::gcp_timer_callback, this));
 
     prism_.self->hp = 400;
+    prism_.game->projectile_allowance = 300;
 
     this->awaken();
 }
@@ -30,6 +33,7 @@ void DecisionBTOne::register_nodes(RMDecision::RMBT::BehaviorTreeFactory& factor
     factory.registerNodeType<GameRunning, DecisionBTOne>("GameRunning", this);
     factory.registerNodeType<OutpostShutdown, DecisionBTOne>("OutpostShutdown", this);
     factory.registerNodeType<HPLow, DecisionBTOne>("HPLow", this);
+    factory.registerNodeType<PALow, DecisionBTOne>("PALow", this);
 }
 
 void DecisionBTOne::pose_sub_callback(const geometry_msgs::msg::PoseStamped::SharedPtr msg) {
@@ -57,6 +61,10 @@ void DecisionBTOne::game_sub_callback(const pb_rm_interfaces::msg::GameStatus::S
     prism_.game->game_start = (msg->game_progress == msg->RUNNING);
 }
 
+void DecisionBTOne::status_sub_callback(const pb_rm_interfaces::msg::RobotStatus::SharedPtr msg) {
+    prism_.game->projectile_allowance = msg->projectile_allowance_17mm;
+}
+
 bool DecisionBTOne::game_running() const {
     return prism_.game->game_start;
 }
@@ -67,6 +75,10 @@ bool DecisionBTOne::outpost_shutdown() const {
 
 uint DecisionBTOne::self_hp() const {
     return prism_.self->hp;
+}
+
+uint DecisionBTOne::projectile_allowance() const {
+    return prism_.game->projectile_allowance;
 }
 
 #include "rm_decision_macros/decision_node_regist_macro.hpp"

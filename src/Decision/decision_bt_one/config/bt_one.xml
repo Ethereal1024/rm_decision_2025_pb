@@ -7,6 +7,7 @@
                 <Sequence>
                     <ReactiveFallback>
                         <HPLow threshold="250"/>
+                        <PALow threshold="50"/>
                         <SubTree ID="PrimaryStrategy"/>
                     </ReactiveFallback>
                     <SubTree ID="Home"/>
@@ -142,14 +143,14 @@
         <Sequence>
             <Repeat num_cycles="200">
                 <Sequence>
-                    <Delay delay_msec="20000">
+                    <Delay delay_msec="15000">
                         <Sequence>
                             <Spin speed="0"/>
                             <NavToPoint targetPoint="11.6;-2.0"/>
                             <SubTree ID="ForceSpin"/>
                         </Sequence>
                     </Delay>
-                    <Delay delay_msec="20000">
+                    <Delay delay_msec="15000">
                         <Sequence>
                             <Spin speed="0"/>
                             <NavToPoint targetPoint="10.5;3.1"/>

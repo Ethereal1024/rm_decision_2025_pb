@@ -212,7 +212,7 @@ public:
     BT::NodeStatus onStart() override {
         start_time_ = host_->now();
         if (!getInput<PlaneCoordinate>("targetVec", goal_)) {
-            throw BT::RuntimeError("missing required input [RotateToVec]");
+            throw BT::RuntimeError("missing required input [targetVec]");
         }
         host_->test_display("[ RotateToVec: STARTED ]\n");
         rotate_thread_ = std::thread(std::bind(&DecisionBT::rotate_to_vec, host_, goal_));
@@ -266,7 +266,7 @@ public:
 
     BT::NodeStatus onStart() override {
         if (!getInput<double>("speed", speed_)) {
-            throw BT::RuntimeError("missing required input [Spin]");
+            throw BT::RuntimeError("missing required input [speed]");
         }
         host_->test_display("[ Spin: STARTED ]\n");
         host_->set_angular_velocity(speed_);
@@ -277,6 +277,7 @@ public:
         if (std::abs(host_->get_current_angle() - previous_angle_) < 0.1) {
             host_->test_display(
                 "[ Spin ] Attempting to spin... (expected speed: %.3f)", speed_);
+            host_->set_angular_velocity(speed_);
             return BT::NodeStatus::RUNNING;
         } else {
             host_->test_display("[ Spin: FINISHED ]\n");
