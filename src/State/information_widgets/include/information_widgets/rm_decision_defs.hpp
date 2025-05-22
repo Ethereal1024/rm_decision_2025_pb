@@ -191,8 +191,11 @@ public:
     static PlaneCoordinate random_point(double radius) {
         std::random_device rd;
         std::mt19937 gen(rd());
-        std::uniform_real_distribution<> dis(-radius, radius);
-        return PlaneCoordinate(dis(gen), dis(gen));
+        std::uniform_real_distribution<> rdis(0, radius);
+        std::uniform_real_distribution<> tdis(0, 2 * M_PI);
+        double r = rdis(gen);
+        double t = tdis(gen);
+        return PlaneCoordinate(r * cos(t), r * sin(t));
     }
 };
 

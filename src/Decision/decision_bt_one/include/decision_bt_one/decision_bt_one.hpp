@@ -98,3 +98,50 @@ public:
         return host_->projectile_allowance() < threshold.value() ? BT::NodeStatus::SUCCESS : BT::NodeStatus::FAILURE;
     }
 };
+
+class Noispin : public RMDecision::RMBT::StatefulActionNode<DecisionBTOne> {
+public:
+    Noispin(const std::string& name,
+            DecisionBTOne* decisionNodeBT,
+            const BT::NodeConfig& config)
+        : RMDecision::RMBT::StatefulActionNode<DecisionBTOne>(name, decisionNodeBT, config) {}
+
+    static BT::PortsList providedPorts() {
+        return {BT::InputPort<double>("speed"), BT::InputPort<double>("amplitude")};
+    }
+
+    BT::NodeStatus onStart() override {
+        if (!getInput<double>("speed", speed_)) {
+            throw BT::RuntimeError("missing required input [speed]");
+        }
+        if (!getInput<double>("amplitude", amplitude_)) {
+            throw BT::RuntimeError("missing required input [amplitude]");
+        }
+        double noispeed = speed_ + RMDecision::PlaneCoordinate::random_point(amplitude_).x;
+        host_->test_display("[ Noispin: STARTED ]\n");
+        host_->set_angular_velocity(noispeed);
+        return BT::NodeStatus::RUNNING;
+    }
+
+    BT::NodeStatus onRunning() override {
+        if (std::abs(host_->get_current_angle() - previous_angle_) < 0.1) {
+            host_->test_display(
+                "[ Noispin ] Attempting to spin... (expected speed: %.3f)", speed_);
+            double noispeed = speed_ + RMDecision::PlaneCoordinate::random_point(amplitude_).x;
+            host_->set_angular_velocity(noispeed);
+            return BT::NodeStatus::RUNNING;
+        } else {
+            host_->test_display("[ Noispin: FINISHED ]\n");
+            return BT::NodeStatus::SUCCESS;
+        }
+    }
+
+    void onHalted() override {
+        host_->test_display("[ Noispin: ABORTED ]\n");
+    }
+
+private:
+    double speed_;
+    double amplitude_;
+    double previous_angle_;
+};

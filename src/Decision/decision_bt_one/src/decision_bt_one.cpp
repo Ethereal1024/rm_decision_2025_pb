@@ -19,6 +19,7 @@ DecisionBTOne::DecisionBTOne(const rclcpp::NodeOptions& options)
     gcp_timer_ = this->create_wall_timer(std::chrono::seconds(1), std::bind(&DecisionBTOne::gcp_timer_callback, this));
 
     prism_.self->hp = 400;
+    prism_.game->projectile_allowance = 300;
 
     this->awaken();
 }
